@@ -77,8 +77,8 @@ if __name__ == "__main__":
 
     cluster_addr = os.getenv("CLUSTER_ADDR")
 
-    opts, args = getopt.getopt(sys.argv, "dw")
-    for opt in opts:
+    opts, args = getopt.getopt(sys.argv[1:], "dw")
+    for opt, arg in opts:
         if opt == "-d":
             print(f"Taking a daily backup of the DB cluster at {cluster_addr}")
             conn.backup_to_b2(cluster_addr, "daily")
