@@ -59,10 +59,16 @@ class B2Connection:
             no_to_delete: int = len(old_backups) - limit
             print(f"{no_to_delete} backups will now be removed")
             old_backups.sort(key=lambda b: b[0].file_info["backup_timestamp"])
-            for file_to_delete in old_backups[:no_to_delete]:
-                print(f"Deleting backup {file_to_delete.file_name}")
-                self.b2api.delete_file_version(
-                    file_to_delete.id_, file_to_delete.file_name)
+            for file_version_to_delete, folder_name in old_backups[:no_to_delete]:
+                try:
+                    print(
+                        f"Deleting backup {file_version_to_delete.file_name}...")
+                    self.bucket.delete_file_version(
+                        file_version_to_delete.id_, file_version_to_delete.file_name)
+                    print("done.")
+                except Exception as e:
+                    print(
+                        f"Failed to delete old backup due to exception {e}")
 
 
 if __name__ == "__main__":
